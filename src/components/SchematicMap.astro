@@ -1,0 +1,188 @@
+---
+// 角島大橋まわりの俯瞰イメージ図（自作SVG）。
+// 各スポットには data-spot を付け、写真スイッチャーと連動できる。
+interface Props {
+  interactive?: boolean;
+  class?: string;
+}
+const { interactive = false, class: klass = '' } = Astro.props;
+
+const spots = [
+  { id: 'amagase', label: '海士ヶ瀬公園', sub: '駐車場・トイレ', x: 616, y: 250, kind: 'park' },
+  { id: 'tenbodai', label: '角島展望台', sub: '木のデッキ', x: 566, y: 170, kind: 'view' },
+  { id: 'front-hill', label: '正面・高台', sub: '定番の正面構図', x: 660, y: 348, kind: 'view' },
+  { id: 'sezakiyo', label: '瀬崎陽の公園', sub: '島側から振り返る', x: 150, y: 150, kind: 'view' },
+] as const;
+---
+<figure class={klass}>
+  <svg
+    viewBox="0 0 760 460"
+    class="h-auto w-full rounded-3xl"
+    role="img"
+    aria-label="角島大橋と主要スポットの位置関係を示す俯瞰イメージ図"
+    data-schematic
+  >
+    <defs>
+      <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#7fd0d8" />
+        <stop offset="1" stop-color="#42b9c5" />
+      </linearGradient>
+      <linearGradient id="shallow" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#cdeef1" />
+        <stop offset="1" stop-color="#8fdbe0" />
+      </linearGradient>
+    </defs>
+
+    <!-- 海 -->
+    <rect width="760" height="460" fill="url(#sea)" />
+    <!-- 等深線のような曲線 -->
+    <g fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="2">
+      <path d="M0 60 Q 380 20 760 70" />
+      <path d="M0 130 Q 380 96 760 140" />
+      <path d="M0 300 Q 380 340 760 300" />
+      <path d="M0 380 Q 380 420 760 380" />
+    </g>
+
+    <!-- 角島（左） -->
+    <path
+      d="M0 90 C 90 80 170 110 200 175 C 220 220 175 275 120 300 C 60 325 0 320 0 320 Z"
+      fill="#e9efdd"
+    />
+    <text x="70" y="240" class="land">角島</text>
+
+    <!-- 本州（右） -->
+    <path
+      d="M760 40 C 690 60 640 120 660 200 C 675 265 720 300 760 320 L760 460 L 500 460 C 560 400 600 330 600 250 C 600 170 640 90 760 60 Z"
+      fill="#e9efdd"
+    />
+    <text x="690" y="420" class="land">本州</text>
+
+    <!-- 鳩島 -->
+    <ellipse cx="430" cy="300" rx="26" ry="15" fill="#c7d6a8" />
+    <text x="430" y="336" class="tiny" text-anchor="middle">鳩島</text>
+
+    <!-- 角島大橋（本州→角島のカーブ） -->
+    <path
+      d="M612 250 C 520 210 360 250 300 210 C 240 172 150 175 120 178"
+      fill="none"
+      stroke="#fafaf7"
+      stroke-width="9"
+      stroke-linecap="round"
+    />
+    <path
+      d="M612 250 C 520 210 360 250 300 210 C 240 172 150 175 120 178"
+      fill="none"
+      stroke="#193139"
+      stroke-opacity="0.18"
+      stroke-width="9"
+      stroke-linecap="round"
+      stroke-dasharray="2 16"
+    />
+    <text x="400" y="205" class="bridge" text-anchor="middle">角島大橋 1,780m</text>
+
+    <!-- スポット -->
+    {
+      spots.map((s) => (
+        <g
+          class="spot"
+          data-spot={s.id}
+          tabindex={interactive ? '0' : undefined}
+          role={interactive ? 'button' : undefined}
+          aria-label={interactive ? `${s.label}の写真を見る` : undefined}
+          style={interactive ? 'cursor:pointer' : ''}
+        >
+          <circle cx={s.x} cy={s.y} r="19" fill="#ffffff" fill-opacity="0.001" />
+          {s.kind === 'park' ? (
+            <g transform={`translate(${s.x} ${s.y})`}>
+              <circle r="11" fill="#193139" />
+              <text class="pin" text-anchor="middle" y="4">
+                P
+              </text>
+            </g>
+          ) : (
+            <circle cx={s.x} cy={s.y} r="8" fill="#126d82" stroke="#fff" stroke-width="3" />
+          )}
+          <g transform={`translate(${s.x} ${s.y})`}>
+            <text class="lbl" x="0" y="-18" text-anchor="middle">
+              {s.label}
+            </text>
+            <text class="sub" x="0" y="-4" text-anchor="middle">
+              {s.sub}
+            </text>
+          </g>
+        </g>
+      ))
+    }
+  </svg>
+
+  <style>
+    .land {
+      fill: #6f7f52;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+    .tiny {
+      fill: #5f7040;
+      font-size: 11px;
+    }
+    .bridge {
+      fill: #0e5566;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .lbl {
+      fill: #12303a;
+      font-size: 13px;
+      font-weight: 700;
+      paint-order: stroke;
+      stroke: #ffffff;
+      stroke-width: 3px;
+      stroke-linejoin: round;
+    }
+    .sub {
+      fill: #33525c;
+      font-size: 10.5px;
+      paint-order: stroke;
+      stroke: #ffffff;
+      stroke-width: 2.5px;
+    }
+    .pin {
+      fill: #fff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .spot.is-active circle[fill='#126d82'] {
+      fill: #ff6b57;
+      r: 10;
+    }
+    .spot:focus-visible {
+      outline: none;
+    }
+    .spot:focus-visible .lbl {
+      fill: #0e5566;
+    }
+  </style>
+</figure>
+
+{
+  interactive && (
+    <script>
+      document.querySelectorAll('[data-schematic] .spot').forEach((el) => {
+        const node = el as HTMLElement;
+        const fire = () => {
+          document.dispatchEvent(new CustomEvent('spot:select', { detail: node.dataset.spot }));
+        };
+        node.addEventListener('click', fire);
+        node.addEventListener('keydown', (e) => {
+          const k = (e as KeyboardEvent).key;
+          if (k === 'Enter' || k === ' ') {
+            e.preventDefault();
+            fire();
+          }
+        });
+      });
+    </script>
+  )
+}

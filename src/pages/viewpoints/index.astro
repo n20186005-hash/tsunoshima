@@ -1,0 +1,91 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import SchematicMap from '../../components/SchematicMap.astro';
+import ViewpointCards from '../../components/ViewpointCards.astro';
+import QA from '../../components/QA.astro';
+import { viewpoints } from '../../data/viewpoints';
+
+const switcher = viewpoints.map((v) => ({ id: v.id, name: v.name, image: v.image, alt: v.alt, sub: v.short, walk: v.walk }));
+const first = switcher[0];
+
+const crumbs = [
+  { name: 'ホーム', path: '/' },
+  { name: '撮影スポット', path: '/viewpoints' },
+];
+---
+<Base
+  title="角島大橋の撮影スポット｜四つの見どころを比較"
+  description="角島展望台・海士ヶ瀬公園・正面の高台・瀬崎陽の公園。角島大橋を望む四つの撮影スポットを、駐車場からの距離やおすすめ焦点距離とあわせて比較します。"
+  image="/images/bridge-panorama.jpg"
+  breadcrumbs={crumbs}
+>
+  <PageHeader
+    eyebrow="撮影スポット"
+    title="四つの眺めを、見比べる"
+    lead="橋の見え方は、立つ場所で変わります。地図上の点をタップすると、その場所からの眺めに切り替わります。"
+    image="/images/bridge-panorama.jpg"
+    alt="角島大橋と浅瀬の色が広がるパノラマ"
+  />
+
+  <section class="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+    <QA q="いちばん有名な写真はどこで撮れますか？">
+      海士ヶ瀬公園の南側の<b>高台</b>から、橋を正面に見る構図が代表的です。専用駐車場はないため、
+      <b>海士ヶ瀬公園</b>に停めて歩いて向かいます。路肩や生活道路への駐停車はご遠慮ください。
+    </QA>
+  </section>
+
+  <!-- 写真スイッチャー -->
+  <section class="mx-auto max-w-6xl px-4 pb-16 md:px-6" aria-labelledby="switch-title" data-switch>
+    <h2 id="switch-title" class="mb-6 font-serif text-2xl text-ink">地図で、眺めを切り替える</h2>
+    <div class="grid gap-6 lg:grid-cols-2 lg:items-center">
+      <SchematicMap interactive class="order-last lg:order-first" />
+      <figure class="overflow-hidden rounded-3xl bg-white shadow-soft">
+        <div class="relative aspect-[3/2]">
+          <img data-switch-img src={first.image} alt={first.alt} class="h-full w-full object-cover" />
+        </div>
+        <figcaption class="p-5">
+          <h3 data-switch-name class="font-serif text-xl text-ink">{first.name}</h3>
+          <p data-switch-sub class="mt-1 text-sm text-ink-soft">{first.sub}</p>
+          <p data-switch-walk class="mt-2 text-xs text-deep">{first.walk}</p>
+        </figcaption>
+      </figure>
+    </div>
+    <p class="mt-3 text-center text-xs text-ink-soft lg:text-left">
+      地図上の点をタップ／クリックすると、その場所からの眺めに切り替わります。
+    </p>
+  </section>
+
+  <!-- 詳細カード -->
+  <section class="mx-auto max-w-6xl px-4 pb-20 md:px-6">
+    <h2 class="mb-8 font-serif text-2xl text-ink">それぞれの特徴</h2>
+    <ViewpointCards />
+  </section>
+
+  <script is:inline set:html={`window.__spots = ${JSON.stringify(switcher)};`} />
+  <script>
+    const spots = (window as any).__spots as {
+      id: string; name: string; image: string; alt: string; sub: string; walk: string;
+    }[];
+    const img = document.querySelector('[data-switch-img]') as HTMLImageElement;
+    const name = document.querySelector('[data-switch-name]')!;
+    const sub = document.querySelector('[data-switch-sub]')!;
+    const walk = document.querySelector('[data-switch-walk]')!;
+
+    function setActive(id: string) {
+      const s = spots.find((x) => x.id === id);
+      if (!s) return;
+      img.src = s.image;
+      img.alt = s.alt;
+      name.textContent = s.name;
+      sub.textContent = s.sub;
+      walk.textContent = s.walk;
+      document.querySelectorAll('[data-schematic] .spot').forEach((el) =>
+        el.classList.toggle('is-active', (el as HTMLElement).dataset.spot === id),
+      );
+      (window as any).gtag?.('event', 'photo_spot_switch', { id });
+    }
+    document.addEventListener('spot:select', (e) => setActive((e as CustomEvent).detail));
+    setActive(spots[0].id);
+  </script>
+</Base>

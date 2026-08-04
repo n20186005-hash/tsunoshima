@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import credits from '../../data/credits.json';
+
+const crumbs = [
+  { name: 'ホーム', path: '/' },
+  { name: '写真クレジット', path: '/credits' },
+];
+---
+<Base
+  title="写真クレジット・出典"
+  description="当サイトで使用している写真の著作者・ライセンス・出典の一覧です。写真はウィキメディア・コモンズのクリエイティブ・コモンズ／パブリックドメインのものを使用しています。"
+  breadcrumbs={crumbs}
+>
+  <PageHeader
+    eyebrow="写真クレジット"
+    title="写真の出典とライセンス"
+    lead="当サイトの写真は、ウィキメディア・コモンズのクリエイティブ・コモンズ等で公開されている作品を、各ライセンスに従って使用しています。"
+  />
+
+  <section class="mx-auto max-w-4xl px-4 pb-20 md:px-6">
+    <div class="overflow-hidden rounded-3xl border border-black/5 bg-white">
+      <ul class="divide-y divide-black/5">
+        {
+          credits.map((c) => (
+            <li class="flex items-center gap-4 p-4">
+              <img src={c.file} alt={c.alt} class="h-16 w-24 shrink-0 rounded-lg object-cover" loading="lazy" />
+              <div class="min-w-0 text-sm">
+                <p class="truncate font-medium text-ink">{c.alt}</p>
+                <p class="text-ink-soft">
+                  撮影：{c.author}／ライセンス：
+                  {c.licenseUrl ? (
+                    <a href={c.licenseUrl} target="_blank" rel="noopener" class="underline underline-offset-2">
+                      {c.license}
+                    </a>
+                  ) : (
+                    c.license
+                  )}
+                </p>
+                {c.sourceUrl && (
+                  <a
+                    href={c.sourceUrl}
+                    target="_blank"
+                    rel="noopener"
+                    class="text-xs text-deep underline underline-offset-2"
+                  >
+                    出典（ウィキメディア・コモンズ）
+                  </a>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <p class="mt-6 text-xs leading-relaxed text-ink-soft">
+      各写真の著作権は撮影者に帰属します。ライセンスの詳細は各リンク先をご確認ください。
+      写真は角島の景観を紹介する目的で使用しており、掲載店舗・施設の公式な提供画像ではありません。
+    </p>
+  </section>
+</Base>

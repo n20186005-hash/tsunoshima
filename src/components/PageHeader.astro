@@ -1,0 +1,57 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  image?: string;
+  alt?: string;
+}
+const { eyebrow, title, lead, image, alt = '' } = Astro.props;
+---
+<section class:list={['relative', image ? 'text-white' : 'text-ink']}>
+  {
+    image && (
+      <>
+        <img
+          src={image}
+          alt={alt}
+          class="absolute inset-0 h-full w-full object-cover"
+          loading="eager"
+        />
+        <div class="scrim absolute inset-0" />
+      </>
+    )
+  }
+  <div
+    class:list={[
+      'relative mx-auto max-w-6xl px-4 md:px-6',
+      image ? 'flex min-h-[46vh] flex-col justify-end pb-10 pt-24' : 'pb-6 pt-14',
+    ]}
+  >
+    {
+      eyebrow && (
+        <p
+          class:list={[
+            'text-xs font-bold tracking-[0.22em]',
+            image ? 'text-sky/90' : 'text-shallow',
+          ]}
+        >
+          {eyebrow}
+        </p>
+      )
+    }
+    <h1 class="mt-2 font-serif text-3xl md:text-4xl">{title}</h1>
+    {
+      lead && (
+        <p
+          class:list={[
+            'mt-4 max-w-2xl text-[15px] leading-relaxed md:text-base',
+            image ? 'text-sand/90' : 'text-ink-soft',
+          ]}
+        >
+          {lead}
+        </p>
+      )
+    }
+  </div>
+</section>

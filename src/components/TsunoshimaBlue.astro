@@ -1,0 +1,147 @@
+---
+// 今日の角島ブルー：Open-Meteo（APIキー不要）から当日の天気を取り、
+// 海の色の見えやすさを 0〜100 の参考指数に変換して、旅行の言葉で表示する。
+---
+<section class="mx-auto max-w-6xl px-4 md:px-6" aria-labelledby="blue-title">
+  <div
+    class="overflow-hidden rounded-3xl border border-deep/10 bg-gradient-to-br from-sky/70 to-white shadow-soft"
+  >
+    <div class="grid gap-0 md:grid-cols-[minmax(0,1fr)_1.4fr]">
+      <!-- 指数 -->
+      <div class="flex flex-col justify-center gap-4 border-b border-deep/10 p-6 md:border-b-0 md:border-r md:p-8">
+        <div>
+          <p class="text-xs font-bold tracking-[0.2em] text-deep">今日の角島ブルー</p>
+          <p class="mt-1 text-sm text-ink-soft">海の色の見えやすさの目安</p>
+        </div>
+        <div class="flex items-end gap-3" data-blue-gauge>
+          <span class="tnum font-serif text-6xl leading-none text-deep" data-blue-score>–</span>
+          <span class="pb-1 text-lg text-ink-soft">/ 100</span>
+        </div>
+        <div class="h-2 overflow-hidden rounded-full bg-deep/10">
+          <div class="h-full w-0 rounded-full bg-shallow transition-[width] duration-700" data-blue-bar></div>
+        </div>
+        <p class="text-sm font-medium text-ink" data-blue-verdict>読み込み中…</p>
+      </div>
+
+      <!-- 時間帯の提案 -->
+      <div class="p-6 md:p-8">
+        <ul class="space-y-3 text-[15px] leading-relaxed text-ink" data-blue-tips>
+          <li class="text-ink-soft">当日の天気から、見ごろの時間帯を計算しています…</li>
+        </ul>
+        <p class="mt-5 border-t border-deep/10 pt-3 text-xs text-ink-soft" data-blue-meta>
+          ※ この指数は当サイトが天気データ（Open-Meteo）から計算した参考値で、公式の指標ではありません。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const LAT = 34.3517;
+  const LON = 130.8862;
+
+  const $ = (s: string) => document.querySelector(s) as HTMLElement | null;
+  const score = $('[data-blue-score]');
+  const bar = $('[data-blue-bar]');
+  const verdict = $('[data-blue-verdict]');
+  const tips = $('[data-blue-tips]');
+  const meta = $('[data-blue-meta]');
+
+  const fmt = (iso: string) =>
+    new Date(iso).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+  const hm = (iso: string) => `${new Date(iso).getHours()}:00`;
+
+  function verdictText(v: number) {
+    if (v >= 78) return '海の色がとても澄んで見えそうな一日です。';
+    if (v >= 58) return 'おおむね良好。晴れ間に色が映えそうです。';
+    if (v >= 38) return '雲が多めの見え方。橋の造形や空を主役に。';
+    return '海の色は控えめかも。灯台や波の表情を楽しむ日に。';
+  }
+
+  async function load() {
+    try {
+      const url =
+        `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
+        `&hourly=cloud_cover,precipitation_probability,wind_speed_10m,visibility` +
+        `&daily=sunrise,sunset&timezone=Asia%2FTokyo&forecast_days=1`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('weather');
+      const d = await res.json();
+      const H = d.hourly;
+      const times: string[] = H.time;
+
+      // 日中（8〜17時）で評価
+      const idxs = times
+        .map((t: string, i: number) => ({ i, h: new Date(t).getHours() }))
+        .filter((o) => o.h >= 8 && o.h <= 17)
+        .map((o) => o.i);
+
+      const avg = (arr: number[]) => arr.reduce((a, b) => a + b, 0) / (arr.length || 1);
+      const cloud = avg(idxs.map((i) => H.cloud_cover[i]));
+      const rain = avg(idxs.map((i) => H.precipitation_probability?.[i] ?? 0));
+      const wind = avg(idxs.map((i) => H.wind_speed_10m[i]));
+      const vis = avg(idxs.map((i) => H.visibility?.[i] ?? 20000)) / 1000;
+
+      // 指数：晴れ・低降水・良好な視程で高く、強風で少し下げる
+      let s = 100;
+      s -= cloud * 0.55; // 雲量
+      s -= rain * 0.35; // 降水確率
+      s -= Math.max(0, 15 - vis) * 1.6; // 視程（15km未満で減点）
+      s -= Math.max(0, wind - 22) * 0.7; // 強風で微減
+      s = Math.max(4, Math.min(100, Math.round(s)));
+
+      if (score) score.textContent = String(s);
+      if (bar) bar.style.width = s + '%';
+      if (verdict) verdict.textContent = verdictText(s);
+      (window as any).__tsunoBlue = s; // シェアカードで利用
+
+      // ベストな時間帯（雲・降水が少ない連続帯）を探す
+      const dayScore = idxs.map((i) => ({
+        i,
+        h: new Date(times[i]).getHours(),
+        v: 100 - H.cloud_cover[i] * 0.7 - (H.precipitation_probability?.[i] ?? 0) * 0.5,
+      }));
+      let best = dayScore[0];
+      for (const o of dayScore) if (o.v > best.v) best = o;
+      const bestStart = Math.max(8, best.h - 1);
+      const bestEnd = Math.min(18, best.h + 1);
+
+      const windPeak = idxs.reduce(
+        (m, i) => (H.wind_speed_10m[i] > H.wind_speed_10m[m] ? i : m),
+        idxs[0],
+      );
+
+      const items: string[] = [];
+      items.push(
+        `<b class="text-deep">${bestStart}:00〜${bestEnd}:00</b> ごろ、海の色がいちばん澄んで見えそうです。`,
+      );
+      if (H.wind_speed_10m[windPeak] >= 24) {
+        items.push(
+          `${hm(times[windPeak])}前後は風が強まる予報。橋の上では横風にご注意ください。`,
+        );
+      } else {
+        items.push('日中の風は穏やかな予報。橋の上も歩きやすそうです。');
+      }
+      if (rain >= 40) {
+        items.push('雨の可能性があります。木道が濡れると滑りやすいのでご注意を。');
+      }
+      const sunset = d.daily?.sunset?.[0];
+      if (sunset) {
+        items.push(`日没は <b>${fmt(sunset)}</b> ごろ。夕景は瀬崎陽の公園から橋を振り返る構図がおすすめです。`);
+      }
+
+      if (tips) tips.innerHTML = items.map((t) => `<li class="flex gap-2"><span class="text-shallow">—</span><span>${t}</span></li>`).join('');
+      if (meta)
+        meta.textContent =
+          `※ ${new Date().toLocaleDateString('ja-JP')} の天気データ（Open-Meteo）から当サイトが計算した参考値です。公式の指標ではありません。`;
+    } catch {
+      if (verdict) verdict.textContent = '天気データを取得できませんでした。';
+      if (tips)
+        tips.innerHTML =
+          '<li class="text-ink-soft">時間をおいて再度お試しください。海の色は、晴れた日の午前中がいちばん澄んで見えます。</li>';
+      (window as any).gtag?.('event', 'weather_card_error');
+    }
+  }
+  load();
+  (window as any).gtag?.('event', 'weather_card_view');
+</script>

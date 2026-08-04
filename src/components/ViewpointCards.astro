@@ -1,0 +1,78 @@
+---
+import { viewpoints } from '../data/viewpoints';
+
+interface Props {
+  ids?: string[];
+}
+const { ids } = Astro.props;
+const list = ids ? viewpoints.filter((v) => ids.includes(v.id)) : viewpoints;
+
+const yn = (b: boolean) => (b ? 'あり' : 'なし');
+---
+<div
+  class="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4"
+  role="list"
+>
+  {
+    list.map((v) => (
+      <article
+        role="listitem"
+        id={`vp-${v.id}`}
+        class="flex w-[82vw] shrink-0 snap-start flex-col overflow-hidden rounded-3xl border border-black/5 bg-white shadow-soft sm:w-[70vw] md:w-auto"
+      >
+        <div class="relative aspect-[3/2] overflow-hidden">
+          <img
+            src={v.image}
+            alt={v.alt}
+            loading="lazy"
+            class="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+          />
+          {v.sunset && (
+            <span class="absolute left-3 top-3 rounded-full bg-wood/90 px-2.5 py-1 text-xs font-medium text-white">
+              夕景◎
+            </span>
+          )}
+        </div>
+        <div class="flex flex-1 flex-col p-5">
+          <h3 class="font-serif text-xl text-ink">{v.name}</h3>
+          <p class="mt-1 text-sm text-ink-soft">{v.short}</p>
+          <p class="mt-3 flex-1 text-sm leading-relaxed text-ink/90">{v.body}</p>
+
+          {v.warn && (
+            <p class="mt-3 rounded-xl bg-wood/10 px-3 py-2 text-xs leading-relaxed text-wood">
+              ⚠ {v.warn}
+            </p>
+          )}
+
+          <dl class="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 border-t border-black/5 pt-4 text-xs">
+            <div>
+              <dt class="text-ink-soft">駐車場から</dt>
+              <dd class="font-medium text-ink">{v.walk}</dd>
+            </div>
+            <div>
+              <dt class="text-ink-soft">おすすめ焦点</dt>
+              <dd class="font-medium text-ink">{v.focal}</dd>
+            </div>
+            <div>
+              <dt class="text-ink-soft">撮影方向</dt>
+              <dd class="font-medium text-ink">{v.direction}</dd>
+            </div>
+            <div>
+              <dt class="text-ink-soft">階段</dt>
+              <dd class="font-medium text-ink">{yn(v.steps)}</dd>
+            </div>
+            <div>
+              <dt class="text-ink-soft">夕景</dt>
+              <dd class="font-medium text-ink">{yn(v.sunset)}</dd>
+            </div>
+            <div>
+              <dt class="text-ink-soft">滞在の目安</dt>
+              <dd class="font-medium text-ink">{v.stay}</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
+    ))
+  }
+</div>
+<p class="mt-1 text-center text-xs text-ink-soft md:hidden">← 横にスワイプして見比べる →</p>

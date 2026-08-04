@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { faqs } from '../../data/faq';
+import { faqSchema } from '../../lib/schema';
+
+const crumbs = [
+  { name: 'ホーム', path: '/' },
+  { name: 'よくある質問', path: '/faq' },
+];
+---
+<Base
+  title="角島展望台・角島大橋のよくある質問"
+  description="駐車場、撮影スポット、アクセス、混雑、強風、コンビニ、ドローンまで。角島展望台と角島大橋についてよく寄せられる質問にまとめてお答えします。"
+  breadcrumbs={crumbs}
+  schemas={[faqSchema(faqs)]}
+>
+  <PageHeader
+    eyebrow="よくある質問"
+    title="出かける前の、疑問に答えます"
+    lead="駐車場から撮影スポット、混雑やマナーまで。まずは結論から、簡潔にお答えします。"
+  />
+
+  <section class="mx-auto max-w-3xl px-4 pb-20 md:px-6">
+    <div class="divide-y divide-black/5 overflow-hidden rounded-3xl border border-black/5 bg-white">
+      {
+        faqs.map((f) => (
+          <details class="group px-6 py-1">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium text-ink">
+              <span class="flex items-start gap-3">
+                <span class="mt-0.5 text-shallow">Q</span>
+                {f.q}
+              </span>
+              <span class="shrink-0 text-ink-soft transition-transform group-open:rotate-45">＋</span>
+            </summary>
+            <p class="pb-5 pl-7 text-[15px] leading-relaxed text-ink-soft">{f.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,117 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import QA from '../../components/QA.astro';
+
+const crumbs = [
+  { name: 'ホーム', path: '/' },
+  { name: '写真ガイド', path: '/photo-guide' },
+];
+
+const weather = [
+  { t: '晴れ', d: '浅瀬のエメラルドグリーンがいちばん映えます。順光になる午前中がおすすめ。', img: '/images/bridge-2017.jpg', alt: '晴れた日の角島大橋と青い海' },
+  { t: '曇り', d: '海の色は控えめでも、橋の造形と空を主役にできます。白い橋がやわらかく写ります。', img: '/images/bridge-side.jpg', alt: '曇りの日の角島大橋の橋脚' },
+  { t: '夕方', d: '瀬崎陽の公園から橋を振り返ると、シルエットと橋の灯りが美しく見えます。', img: '/images/seaside.jpg', alt: '夕方の角島の海岸' },
+  { t: '冬', d: '波と雲、灯台まわりの水仙など、静かな海の表情が魅力。防寒と足元の準備を。', img: '/images/lighthouse-winter.jpg', alt: '水仙と冬の角島灯台' },
+  { t: '雨のあと', d: '木道が濡れて滑りやすくなります。足元に注意しつつ、澄んだ空気を生かして。', img: '/images/bridge-rough.jpg', alt: '雨上がりでやや波立つ角島大橋の海' },
+];
+
+const focal = [
+  { f: 'スマホ 1×', d: '橋と海の全景。まずはこの一枚で全体をおさえる。' },
+  { f: 'スマホ 2×〜3×', d: '橋のカーブを圧縮して、伸びやかな曲線を強調。' },
+  { f: '24〜35mm', d: '周囲の風景も入れた、その場の空気ごと。' },
+  { f: '50〜85mm', d: '車や橋、鳩島を切り取る。定番の中央構図に。' },
+  { f: '100mm以上', d: '橋の奥や島を圧縮。望遠ならではの密度感。' },
+];
+
+const manners = [
+  '車道に立ち止まらない。',
+  '橋の上に駐停車しない。',
+  '生活道路・私有地に入らない。',
+  'ガードレールを越えない。',
+  'ドローンは「自由に飛ばせる場所」ではありません。',
+];
+---
+<Base
+  title="角島大橋の撮影スポット・写真の撮り方ガイド"
+  description="角島大橋を美しく撮るためのガイド。天気別の狙い方、おすすめ焦点距離、そして安全に撮るためのマナー。定番の正面構図の撮影場所も紹介します。"
+  image="/images/bridge-front.jpg"
+  breadcrumbs={crumbs}
+>
+  <PageHeader
+    eyebrow="写真ガイド"
+    title="角島大橋を、きれいに撮る"
+    lead="同じ橋でも、天気と焦点距離で表情が変わります。安全とマナーを守って、いちばんの一枚を。"
+    image="/images/bridge-front.jpg"
+    alt="山側の高台から見た角島大橋の正面構図"
+  />
+
+  <section class="mx-auto max-w-6xl px-4 py-12 md:px-6">
+    <QA q="定番の正面構図は、どこから撮りますか？">
+      海士ヶ瀬公園の南側にある<b>高台</b>から、橋が角島へまっすぐ伸びる中央構図を狙えます。
+      専用駐車場はないため、海士ヶ瀬公園に停めて徒歩で。望遠側で圧縮すると、橋のカーブがより際立ちます。
+    </QA>
+  </section>
+
+  <!-- 天気別 -->
+  <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+    <h2 class="mb-8 font-serif text-2xl text-ink">天気で、狙いを変える</h2>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        weather.map((w) => (
+          <article class="overflow-hidden rounded-3xl border border-black/5 bg-white shadow-soft">
+            <img src={w.img} alt={w.alt} class="h-40 w-full object-cover" loading="lazy" />
+            <div class="p-5">
+              <h3 class="font-serif text-lg text-ink">{w.t}</h3>
+              <p class="mt-1 text-sm leading-relaxed text-ink-soft">{w.d}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 焦点距離 -->
+  <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+    <h2 class="mb-6 font-serif text-2xl text-ink">焦点距離の目安</h2>
+    <div class="overflow-hidden rounded-3xl border border-black/5 bg-white">
+      <dl class="divide-y divide-black/5">
+        {
+          focal.map((f) => (
+            <div class="grid grid-cols-[7.5rem_1fr] gap-4 px-5 py-4 sm:grid-cols-[10rem_1fr]">
+              <dt class="font-medium text-deep">{f.f}</dt>
+              <dd class="text-sm text-ink-soft">{f.d}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- マナー -->
+  <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+    <div class="rounded-3xl bg-ink p-8 text-sand md:p-10">
+      <h2 class="font-serif text-2xl text-white">撮影のマナー</h2>
+      <p class="mt-2 text-sm text-sand/80">
+        角島は人が暮らす島であり、生活道路や住まいがあります。次のことを守って、気持ちよく撮りましょう。
+      </p>
+      <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+        {
+          manners.map((m) => (
+            <li class="flex items-start gap-3 rounded-2xl bg-white/5 px-4 py-3">
+              <span class="mt-0.5 text-shallow">✓</span>
+              <span class="text-sm">{m}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mt-6 rounded-2xl border border-white/15 bg-white/5 px-5 py-4 text-sm leading-relaxed text-sand/90">
+        <p class="font-medium text-white">ドローンについて</p>
+        <p class="mt-1 text-sand/80">
+          下関市は2026年7月1日から、海士ヶ瀬公園・角島灯台公園でのドローン飛行に事前の<b>飛行届出</b>を求めています。
+          これは市への届出であり、国土交通省の飛行許可とは別のものです。ルールとマナーを必ず守ってください。
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>

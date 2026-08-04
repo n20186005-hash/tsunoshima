@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PlanBuilder from '../../components/PlanBuilder.astro';
+import { routes } from '../../data/routes';
+
+const crumbs = [
+  { name: 'ホーム', path: '/' },
+  { name: 'モデルコース', path: '/model-course' },
+];
+---
+<Base
+  title="角島のモデルコース｜45分・3時間・半日・1日プラン"
+  description="時間に合わせて選べる角島のモデルコース。大橋だけの45分から、灯台や海水浴場をめぐる定番、撮影中心の半日、北浦をめぐる1日まで。行きたい場所を選んでプランも作れます。"
+  image="/images/lighthouse.jpg"
+  breadcrumbs={crumbs}
+>
+  <PageHeader
+    eyebrow="モデルコース"
+    title="時間に合わせて、めぐる"
+    lead="滞在時間に合わせて、無理のない順番で。まずは定番コースから、自分だけのプランづくりまで。"
+    image="/images/bridge-classic.jpg"
+    alt="角島へまっすぐ伸びる角島大橋"
+  />
+
+  <!-- コース -->
+  <section class="mx-auto max-w-6xl px-4 py-14 md:px-6">
+    <div class="grid gap-6 md:grid-cols-2">
+      {
+        routes.map((r) => (
+          <article class="overflow-hidden rounded-3xl border border-black/5 bg-white shadow-soft">
+            <div class="relative">
+              <img src={r.image} alt={r.alt} class="h-44 w-full object-cover" loading="lazy" />
+              <div class="scrim absolute inset-0" />
+              <div class="absolute bottom-0 left-0 p-5 text-white">
+                <p class="text-xs font-bold text-sky">{r.duration}</p>
+                <h2 class="font-serif text-xl">{r.title.split('―')[1]?.trim() ?? r.title}</h2>
+              </div>
+            </div>
+            <div class="p-5">
+              <p class="text-sm text-ink-soft">{r.best}</p>
+              <ol class="mt-4 space-y-2">
+                {r.steps.map((s, i) => (
+                  <li class="flex items-baseline gap-3 text-sm">
+                    <span class="tnum text-shallow">{String(i + 1).padStart(2, '0')}</span>
+                    <span class="text-ink">
+                      {s.label}
+                      {s.note && <span class="text-ink-soft">（{s.note}）</span>}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <div class="hairline mx-auto max-w-5xl"></div>
+
+  <!-- プランづくり -->
+  <section class="py-14">
+    <PlanBuilder />
+  </section>
+</Base>

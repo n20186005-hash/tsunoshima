@@ -1,0 +1,87 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+
+const crumbs = [
+  { name: 'ホーム', path: '/' },
+  { name: '歴史', path: '/history' },
+];
+
+const timeline = [
+  { year: '1876', title: '角島灯台、点灯', d: '英国人技師 R・H・ブラントンの設計。御影石の塔がともる。' },
+  { year: '2000', title: '角島大橋、開通', d: '海の上に、全長約1,780mの道が架かる。' },
+  { year: '2020', title: '灯台が重要文化財に', d: '角島灯台が国の重要文化財に指定される。' },
+  { year: '2026', title: '点灯150周年', d: '灯台がともって150年の節目を迎える。' },
+];
+---
+<Base
+  title="角島の歴史｜灯台と大橋の物語"
+  description="離島だった角島に、1876年の灯台、2000年の大橋。灯台と海路、そして橋という三つの線で、角島の歴史をたどります。"
+  image="/images/lighthouse.jpg"
+  breadcrumbs={crumbs}
+>
+  <PageHeader
+    eyebrow="角島の歴史"
+    title="灯台は海路を見守り、大橋は島をつないだ。"
+    lead="1876年、島の西端に灯台がともりました。2000年、海の上に一本の道が架かりました。"
+    image="/images/lighthouse.jpg"
+    alt="青空にそびえる御影石造りの角島灯台"
+  />
+
+  <!-- 時間軸 -->
+  <section class="mx-auto max-w-6xl px-4 py-14 md:px-6">
+    <ol class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        timeline.map((t) => (
+          <li class="rounded-3xl border border-black/5 bg-white p-6 shadow-soft">
+            <p class="tnum font-serif text-3xl text-deep">{t.year}</p>
+            <h2 class="mt-2 font-serif text-lg text-ink">{t.title}</h2>
+            <p class="mt-1 text-sm leading-relaxed text-ink-soft">{t.d}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- 本文 -->
+  <article class="mx-auto max-w-3xl px-4 pb-20 md:px-6">
+    <section class="border-t border-black/5 py-12">
+      <p class="text-xs font-bold tracking-[0.2em] text-shallow">第一章</p>
+      <h2 class="mt-2 font-serif text-2xl text-ink">橋が架かる前の、角島</h2>
+      <p class="mt-5 leading-loose text-ink/90">
+        角島は、日本海に浮かぶ離島でした。周囲を澄んだ海に囲まれ、人々は漁とともに暮らしてきました。
+        本州とは船で結ばれ、島へ渡ることは、そのまま海を渡ることでした。低くやわらかな島の稜線、
+        岩礁に砕ける波、干した「めのは（わかめ）」の小屋——島の風景は、海の恵みと隣り合わせにありました。
+      </p>
+    </section>
+
+    <section class="border-t border-black/5 py-12">
+      <p class="text-xs font-bold tracking-[0.2em] text-shallow">第二章</p>
+      <h2 class="mt-2 font-serif text-2xl text-ink">1876年の、角島灯台</h2>
+      <figure class="my-7 overflow-hidden rounded-3xl">
+        <img src="/images/lighthouse2.jpg" alt="御影石造りの角島灯台" class="w-full object-cover" loading="lazy" />
+      </figure>
+      <p class="leading-loose text-ink/90">
+        角島灯台は、英国人技師 R・H・ブラントンの設計により、1876年（明治9年）に完成し、灯りをともしました。
+        高さ約29.62メートルの塔は、無塗装の御影石造り。日本海の海路を照らし続け、2020年には国の重要文化財に
+        指定されました。そして2026年は、点灯から150周年の節目にあたります。いまも登れる灯台として、
+        らせん階段の先に、島と海を見渡す景色が待っています。
+      </p>
+    </section>
+
+    <section class="border-t border-black/5 py-12">
+      <p class="text-xs font-bold tracking-[0.2em] text-shallow">第三章</p>
+      <h2 class="mt-2 font-serif text-2xl text-ink">2000年の、角島大橋</h2>
+      <figure class="my-7 overflow-hidden rounded-3xl">
+        <img src="/images/bridge-classic.jpg" alt="角島へまっすぐ伸びる角島大橋" class="w-full object-cover" loading="lazy" />
+      </figure>
+      <p class="leading-loose text-ink/90">
+        2000年、角島大橋が開通しました。全長は約1,780メートル。いまも無料で通行できるこの橋は、
+        角島でもっとも知られた景色になりました。橋がゆるやかに描く曲線は、浅瀬の色を避けるように
+        引かれた線でもあります。橋、エメラルドグリーンの浅瀬、小さな鳩島、そして奥に横たわる角島——
+        いくつもの層が重なって、あの一枚の風景が生まれます。橋ができてから、角島への旅は「渡る」ものから
+        「走る」ものへと変わりました。本州側の展望台が、多くの人にとっての撮影の入口になったのも、この橋があってこそです。
+      </p>
+    </section>
+  </article>
+</Base>

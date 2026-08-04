@@ -1,0 +1,61 @@
+---
+import { nav, site } from '../data/site';
+import BrandMark from './BrandMark.astro';
+---
+<footer class="mt-20 border-t border-black/5 bg-ink text-sand/90">
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-3 md:px-6">
+    <div>
+      <div class="flex items-center gap-2.5">
+        <BrandMark class="h-9 w-9 text-sky" />
+        <div class="leading-none">
+          <div class="font-serif text-lg text-white">{site.name}</div>
+          <div class="text-[10px] tracking-[0.22em] text-sand/60">TSUNOSHIMA VIEWPOINT</div>
+        </div>
+      </div>
+      <p class="mt-4 max-w-xs text-sm leading-relaxed text-sand/70">
+        角島大橋を望む、海への入口。<br />
+        車の停め方から撮影スポット、島内の楽しみ方まで。
+      </p>
+    </div>
+
+    <nav aria-label="フッターメニュー">
+      <h2 class="text-xs font-bold tracking-widest text-sand/50">ページ</h2>
+      <ul class="mt-4 grid grid-cols-2 gap-y-2 text-sm">
+        {
+          nav.map((item) => (
+            <li>
+              <a class="text-sand/80 transition-colors hover:text-white" href={item.href}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="text-sm">
+      <h2 class="text-xs font-bold tracking-widest text-sand/50">この地域を旅する</h2>
+      <p class="mt-4 leading-relaxed text-sand/70">
+        山口県下関市豊北町・角島。<br />
+        本州側の駐車場は「海士ヶ瀬公園」。<br />
+        島にコンビニはありません。飲み物は先に。
+      </p>
+      <a
+        href="/credits"
+        class="mt-4 inline-block text-sand/60 underline decoration-sand/30 underline-offset-4 hover:text-white"
+        >写真クレジット・出典</a
+      >
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div
+      class="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-6 text-xs text-sand/50 md:flex-row md:items-center md:justify-between md:px-6"
+    >
+      <p>
+        © {new Date().getFullYear()} {site.name}ガイド ― 独立した旅行ガイドです（公式サイトではありません）。
+      </p>
+      <p>掲載情報は変わることがあります。お出かけ前に最新情報をご確認ください。</p>
+    </div>
+  </div>
+</footer>

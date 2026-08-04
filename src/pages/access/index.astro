@@ -1,0 +1,181 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import QA from '../../components/QA.astro';
+import { geo, navUrl } from '../../data/site';
+import { faqSchema } from '../../lib/schema';
+
+const crumbs = [
+  { name: 'ホーム', path: '/' },
+  { name: 'アクセス・駐車場', path: '/access' },
+];
+
+const carRoutes = [
+  { from: '下関IC', time: '約70分' },
+  { from: '小月IC', time: '約60分' },
+  { from: '美祢IC', time: '約60分' },
+];
+
+const parkingFacts = [
+  { k: '料金', v: '無料' },
+  { k: '台数', v: '約46台' },
+  { k: '開放', v: '24時間' },
+  { k: '大型バス', v: '駐車枠なし' },
+  { k: '設備', v: 'トイレ・多機能トイレ・障がい者用区画' },
+  { k: '展望台', v: '駐車後、徒歩で' },
+];
+
+// 時刻表の最終確認日（バス改正日：2026-03-14）
+const timetableVerified = '2026-08-03';
+
+const accessFaq = [
+  { q: '角島大橋の駐車場はどこですか？', a: '本州側は海士ヶ瀬公園の無料駐車場（約46台・24時間）です。ナビの目的地は展望台ではなく「海士ヶ瀬公園」に設定してください。' },
+  { q: 'バスで角島まで行けますか？', a: 'JR滝部駅または特牛駅から角島方面のバスに乗り、「ホテル西長門リゾート入口」で下車、徒歩約3分です。便数が少ないため当日の時刻を必ずご確認ください。' },
+  { q: '夏は渋滞しますか？', a: '夏休み・お盆・週末は混雑します。角島から本州へ戻る方向は13:30〜15:00ごろが混雑の目安です。午前中の到着がおすすめです。' },
+];
+---
+<Base
+  title="角島展望台へのアクセス｜駐車場・バス・混雑情報"
+  description="角島大橋・角島展望台へのアクセスガイド。海士ヶ瀬公園の無料駐車場、車での所要時間、路線バスの乗り継ぎ、夏の混雑と強風時の通行規制まで。"
+  image="/images/bus.jpg"
+  breadcrumbs={crumbs}
+  schemas={[faqSchema(accessFaq)]}
+>
+  <PageHeader
+    eyebrow="アクセス・駐車場"
+    title="迷わず、正しい駐車場へ"
+    lead="ナビの目的地は「展望台」ではなく、道路向かいの海士ヶ瀬公園に。まずはここに車を停めます。"
+    image="/images/bus.jpg"
+    alt="角島大橋のたもとを走る路線バス"
+  />
+
+  <section class="mx-auto max-w-6xl px-4 py-12 md:px-6">
+    <QA q="角島大橋はどこに車を停めますか？">
+      本州側では、<b>海士ヶ瀬公園</b>の無料駐車場（約46台・24時間）を利用できます。
+      展望台の座標へ直接ナビをすると、停めにくい場所へ案内されることがあります。目的地は<b>海士ヶ瀬公園</b>に。
+    </QA>
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a
+        href={navUrl(geo.amagase)}
+        target="_blank"
+        rel="noopener"
+        data-ga="parking_navigation_click"
+        class="rounded-full bg-deep px-6 py-3 font-medium text-white shadow-soft transition-transform hover:-translate-y-0.5"
+      >
+        海士ヶ瀬公園へナビ →
+      </a>
+      <a
+        href={navUrl(geo.viewpoint)}
+        target="_blank"
+        rel="noopener"
+        data-ga="parking_navigation_click"
+        data-ga-params='{"target":"viewpoint"}'
+        class="rounded-full border border-ink/20 px-6 py-3 font-medium text-ink transition-colors hover:bg-white"
+      >
+        展望台の位置を地図で見る
+      </a>
+    </div>
+  </section>
+
+  <!-- 車 -->
+  <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+    <div class="grid gap-8 lg:grid-cols-2">
+      <div>
+        <h2 class="font-serif text-2xl text-ink">車で行く</h2>
+        <p class="mt-2 text-sm text-ink-soft">主なインターチェンジからの目安。</p>
+        <ul class="mt-5 space-y-2">
+          {
+            carRoutes.map((r) => (
+              <li class="flex items-center justify-between rounded-2xl border border-black/5 bg-white px-5 py-3.5">
+                <span class="font-medium text-ink">{r.from} から</span>
+                <span class="tnum font-serif text-lg text-deep">{r.time}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-3 text-xs text-ink-soft">
+          目的地は「海士ヶ瀬公園駐車場」。展望台の座標ではなく、駐車場を指定してください。
+        </p>
+      </div>
+
+      <!-- 駐車場情報カード -->
+      <div class="rounded-3xl border border-deep/10 bg-white p-6 shadow-soft">
+        <h3 class="font-serif text-xl text-ink">海士ヶ瀬公園 駐車場</h3>
+        <dl class="mt-4 divide-y divide-black/5">
+          {
+            parkingFacts.map((f) => (
+              <div class="flex items-start justify-between gap-4 py-2.5">
+                <dt class="text-sm text-ink-soft">{f.k}</dt>
+                <dd class="text-right text-sm font-medium text-ink">{f.v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- バス -->
+  <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+    <h2 class="font-serif text-2xl text-ink">バス・公共交通で行く</h2>
+    <ol class="mt-6 space-y-0">
+      {
+        [
+          { t: 'JR滝部駅 または JR特牛駅', d: '山陰本線。ここからバスに乗り継ぎます。' },
+          { t: '角島方面のバス（ブルーライン交通）', d: '滝部駅から約30分。便数は多くありません。' },
+          { t: '「ホテル西長門リゾート入口」で下車', d: 'このバス停が最寄りです。' },
+          { t: '徒歩約3分で海士ヶ瀬公園・展望台へ', d: '橋のたもとまで歩いてすぐ。' },
+        ].map((s, i, arr) => (
+          <li class="relative flex gap-4 pb-6 last:pb-0">
+            {i < arr.length - 1 && (
+              <span class="absolute left-[13px] top-7 h-full w-px bg-deep/20" />
+            )}
+            <span class="tnum z-10 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-deep text-sm font-bold text-white">
+              {i + 1}
+            </span>
+            <div>
+              <p class="font-medium text-ink">{s.t}</p>
+              <p class="text-sm text-ink-soft">{s.d}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+    <div class="mt-5 rounded-2xl bg-sky/50 px-5 py-4 text-sm text-ink">
+      <p class="font-medium">🕑 時刻表は必ず当日確認を</p>
+      <p class="mt-1 text-ink-soft">
+        ブルーライン交通は2026年3月14日に一部ダイヤが改正されました。便数が少なく、最終便も早めです。
+        往路・復路の時刻、最終バスの時間は、お出かけ前に運行事業者の最新情報をご確認ください。
+        （当ガイドの最終確認：{timetableVerified}）
+      </p>
+    </div>
+  </section>
+
+  <!-- 混雑 -->
+  <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="rounded-3xl bg-wood/10 p-6">
+        <h2 class="font-serif text-2xl text-ink">混雑を避ける</h2>
+        <p class="mt-3 text-sm leading-relaxed text-ink">
+          夏休み・お盆・週末・祝日は混み合います。特に夏の休日は、角島から本州へ戻る方向で
+          <b>13:30〜15:00</b> ごろが混雑の目安です。
+        </p>
+        <p class="mt-3 rounded-xl bg-white/70 px-4 py-3 text-sm font-medium text-wood">
+          今日は午前中の到着がおすすめです。
+        </p>
+      </div>
+      <!-- 強風 -->
+      <div class="rounded-3xl border border-deep/15 bg-white p-6">
+        <h2 class="font-serif text-2xl text-ink">強風時の通行情報</h2>
+        <p class="mt-3 text-sm leading-relaxed text-ink-soft">
+          角島大橋は、風が強い日に交通規制が行われることがあります。橋の上は横風を受けやすい場所です。
+        </p>
+        <ul class="mt-4 space-y-2 text-sm text-ink">
+          <li class="flex gap-2"><span class="text-shallow">—</span>出発前に、当日の風の予報を確認する。</li>
+          <li class="flex gap-2"><span class="text-shallow">—</span>現地の電光表示・案内標識に従う。</li>
+          <li class="flex gap-2"><span class="text-shallow">—</span>橋上での駐停車・撮影のための停車はしない。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>

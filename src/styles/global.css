@@ -1,0 +1,96 @@
+@import 'tailwindcss';
+
+/* 日本語フォント（セルフホスト・日本語＋ラテンのサブセットのみ） */
+@import '@fontsource/noto-sans-jp/japanese-400.css';
+@import '@fontsource/noto-sans-jp/japanese-500.css';
+@import '@fontsource/noto-sans-jp/japanese-700.css';
+@import '@fontsource/noto-sans-jp/latin-400.css';
+@import '@fontsource/noto-sans-jp/latin-500.css';
+@import '@fontsource/noto-sans-jp/latin-700.css';
+@import '@fontsource/zen-kaku-gothic-new/japanese-400.css';
+@import '@fontsource/zen-kaku-gothic-new/japanese-500.css';
+@import '@fontsource/zen-kaku-gothic-new/japanese-700.css';
+@import '@fontsource/zen-kaku-gothic-new/latin-400.css';
+@import '@fontsource/zen-kaku-gothic-new/latin-500.css';
+@import '@fontsource/zen-kaku-gothic-new/latin-700.css';
+@import '@fontsource/shippori-mincho/japanese-400.css';
+@import '@fontsource/shippori-mincho/japanese-500.css';
+@import '@fontsource/shippori-mincho/japanese-600.css';
+@import '@fontsource/shippori-mincho/latin-400.css';
+@import '@fontsource/shippori-mincho/latin-500.css';
+@import '@fontsource/shippori-mincho/latin-600.css';
+
+@theme {
+  /* 角島ブルーのパレット */
+  --color-shallow: #42b9c5; /* 浅海 */
+  --color-deep: #126d82; /* 深海 */
+  --color-sky: #d9eef2; /* 空の淡い青 */
+  --color-sand: #f4f0e6; /* 砂浜の生成り */
+  --color-bridge: #fafaf7; /* 橋の白 */
+  --color-wood: #a8784f; /* 木道の茶 */
+  --color-ink: #193139; /* 濃い文字 */
+  --color-ink-soft: #48606a;
+
+  --font-sans: 'Zen Kaku Gothic New', 'Noto Sans JP', system-ui, sans-serif;
+  --font-body: 'Noto Sans JP', 'Zen Kaku Gothic New', system-ui, sans-serif;
+  --font-serif: 'Shippori Mincho', 'Noto Serif JP', serif;
+
+  --shadow-soft: 0 10px 40px -20px rgba(18, 109, 130, 0.45);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--color-sand);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-feature-settings: 'palt';
+    line-height: 1.8;
+    text-wrap: pretty;
+  }
+  h1,
+  h2,
+  h3,
+  .font-serif {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  ::selection {
+    background: var(--color-shallow);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-deep);
+    outline-offset: 2px;
+  }
+}
+
+/* うっすらとした砂色の地。橋を思わせる細い水平線 */
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-shallow),
+    transparent
+  );
+}
+
+/* 画像の上に載せる、下方向の暗いグラデーション */
+.scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(9, 30, 38, 0) 0%,
+    rgba(9, 30, 38, 0.12) 45%,
+    rgba(9, 30, 38, 0.78) 100%
+  );
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}

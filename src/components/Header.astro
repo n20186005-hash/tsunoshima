@@ -1,0 +1,78 @@
+---
+import { nav, site } from '../data/site';
+import BrandMark from './BrandMark.astro';
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+---
+<header class="sticky top-0 z-40 border-b border-black/5 bg-sand/85 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 md:px-6">
+    <a href="/" class="flex items-center gap-2.5 text-ink" aria-label={`${site.name} ホームへ`}>
+      <BrandMark class="h-8 w-8 text-deep" />
+      <span class="flex flex-col leading-none">
+        <span class="font-serif text-lg tracking-wide">{site.name}</span>
+        <span class="text-[10px] tracking-[0.22em] text-ink-soft">TSUNOSHIMA VIEWPOINT</span>
+      </span>
+    </a>
+
+    <nav class="ml-auto hidden items-center gap-1 lg:flex" aria-label="メインメニュー">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'rounded-full px-3 py-1.5 text-sm transition-colors',
+              isActive(item.href)
+                ? 'bg-deep text-white'
+                : 'text-ink-soft hover:bg-white/70 hover:text-ink',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <button
+      id="menu-toggle"
+      class="ml-auto rounded-full border border-ink/15 p-2 text-ink lg:hidden"
+      aria-label="メニューを開く"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <nav
+    id="mobile-menu"
+    class="hidden border-t border-black/5 bg-sand px-4 pb-4 lg:hidden"
+    aria-label="メインメニュー（モバイル）"
+  >
+    <div class="grid grid-cols-2 gap-1 pt-2">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'rounded-xl px-3 py-2.5 text-sm',
+              isActive(item.href) ? 'bg-deep text-white' : 'bg-white/70 text-ink',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+</header>
+
+<script>
+  const btn = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden') === false;
+    btn.setAttribute('aria-expanded', String(open));
+  });
+</script>

@@ -1,0 +1,230 @@
+---
+import Base from '../layouts/Base.astro';
+import SchematicMap from '../components/SchematicMap.astro';
+import ViewpointCards from '../components/ViewpointCards.astro';
+import TsunoshimaBlue from '../components/TsunoshimaBlue.astro';
+import QA from '../components/QA.astro';
+import { site, geo, navUrl } from '../data/site';
+import { routes } from '../data/routes';
+import { faqSchema } from '../lib/schema';
+import { faqs } from '../data/faq';
+
+const quickFacts = [
+  { k: '駐車場', v: '無料・約46台' },
+  { k: '見学', v: '24時間' },
+  { k: 'おすすめ', v: '晴れた午前' },
+];
+
+const guideCards = [
+  { href: '/access', title: 'アクセス・駐車場', sub: '車・バス・混雑・強風', img: '/images/bus.jpg' },
+  { href: '/photo-guide', title: '写真ガイド', sub: '天気別・焦点距離・マナー', img: '/images/bridge-front.jpg' },
+  { href: '/food', title: '周辺グルメ', sub: '過橋前・島内・環島途中', img: '/images/store.jpg' },
+];
+---
+<Base schemas={[faqSchema(faqs.slice(0, 6))]}>
+  <!-- Hero -->
+  <section class="relative">
+    <img
+      src="/images/hero-bridge.jpg"
+      alt="海の上を弧を描いて角島へ伸びる角島大橋の空撮"
+      class="absolute inset-0 h-full w-full object-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="scrim absolute inset-0"></div>
+    <div class="relative mx-auto flex min-h-[86vh] max-w-6xl flex-col justify-end px-4 pb-12 pt-28 text-white md:px-6">
+      <p class="text-xs font-bold tracking-[0.28em] text-sky/90">角島展望台 ・ 山口県下関市</p>
+      <h1 class="mt-3 font-serif text-4xl leading-tight drop-shadow md:text-6xl">
+        海へ伸びる、一本の道。<br />
+        角島の旅は、この景色から始まる。
+      </h1>
+      <p class="mt-5 max-w-xl text-sand/90 md:text-lg">
+        角島大橋を望む、本州側の展望台ガイド。車の停め方から撮影スポット、島内の楽しみ方まで。
+      </p>
+
+      <!-- Quick facts -->
+      <dl class="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+        {
+          quickFacts.map((f) => (
+            <div class="flex items-baseline gap-2">
+              <dt class="text-xs tracking-widest text-sky/80">{f.k}</dt>
+              <dd class="font-serif text-lg">{f.v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href={navUrl(geo.amagase)}
+          target="_blank"
+          rel="noopener"
+          data-ga="hero_navigation_click"
+          data-ga-params='{"target":"parking"}'
+          class="rounded-full bg-white px-6 py-3 font-medium text-ink shadow-soft transition-transform hover:-translate-y-0.5"
+        >
+          駐車場へナビ →
+        </a>
+        <a
+          href="/viewpoints"
+          class="rounded-full border border-white/60 px-6 py-3 font-medium text-white backdrop-blur transition-colors hover:bg-white/15"
+        >
+          撮影スポットを見る
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 先に、位置関係を -->
+  <section class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-24">
+    <div class="grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div>
+        <p class="text-xs font-bold tracking-[0.2em] text-shallow">まず、ここだけ</p>
+        <h2 class="mt-2 font-serif text-3xl text-ink">四つの場所を、取り違えないために</h2>
+        <p class="mt-4 leading-relaxed text-ink-soft">
+          角島大橋は、いくつかの場所から眺められます。名前が似ていて混同しやすいので、
+          先に位置関係だけつかんでおくと迷いません。
+        </p>
+        <ul class="mt-6 space-y-3 text-[15px]">
+          <li class="flex gap-3">
+            <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-deep"></span>
+            <span><b>角島展望台</b>：橋の左手、少し高い位置の木のデッキ。橋脚と浅瀬の色を見下ろせます。</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-ink text-[8px] font-bold text-white">P</span>
+            <span><b>海士ヶ瀬公園</b>：橋の右手。駐車場とトイレがいちばん近い、旅の拠点。</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-deep"></span>
+            <span><b>正面・高台</b>：定番の中央構図。ただし専用駐車場はなく、海士ヶ瀬公園から歩きます。</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-deep"></span>
+            <span><b>瀬崎陽の公園</b>：橋を渡った角島側。本州と鳩島を振り返れます。</span>
+          </li>
+        </ul>
+        <a href="/viewpoints" class="mt-6 inline-block font-medium text-deep underline underline-offset-4">
+          四つのスポットを詳しく →
+        </a>
+      </div>
+      <SchematicMap class="lg:order-last" />
+    </div>
+  </section>
+
+  <div class="hairline mx-auto max-w-5xl"></div>
+
+  <!-- 4スポット比較 -->
+  <section class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+    <div class="mb-8 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p class="text-xs font-bold tracking-[0.2em] text-shallow">撮影スポット</p>
+        <h2 class="mt-2 font-serif text-3xl text-ink">四つの眺めを、見比べる</h2>
+      </div>
+      <a href="/photo-guide" class="text-sm font-medium text-deep underline underline-offset-4">
+        写真の撮り方ガイド →
+      </a>
+    </div>
+    <ViewpointCards />
+  </section>
+
+  <!-- 今日の角島ブルー -->
+  <section class="py-8">
+    <TsunoshimaBlue />
+  </section>
+
+  <!-- GEO Q&A -->
+  <section class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+    <h2 class="mb-8 font-serif text-3xl text-ink">よくある、はじめの疑問</h2>
+    <div class="grid gap-4 md:grid-cols-3">
+      <QA q="どこに車を停める？">
+        本州側は<b>海士ヶ瀬公園</b>の無料駐車場（約46台・24時間）。ナビは「展望台」ではなく<b>海士ヶ瀬公園</b>へ。
+      </QA>
+      <QA q="定番の写真はどこ？">
+        海士ヶ瀬公園の南側の<b>高台</b>から、橋を正面に。駐車場はないので、公園に停めて歩きます。
+      </QA>
+      <QA q="いつ行くのが良い？">
+        海の色を楽しむなら<b>晴れた日の午前中</b>。夏の休日は混むので早めの到着が安心です。
+      </QA>
+    </div>
+    <a href="/faq" class="mt-6 inline-block text-sm font-medium text-deep underline underline-offset-4">
+      よくある質問をすべて見る →
+    </a>
+  </section>
+
+  <!-- ガイドカード -->
+  <section class="mx-auto max-w-6xl px-4 pb-8 md:px-6">
+    <div class="grid gap-4 md:grid-cols-3">
+      {
+        guideCards.map((c) => (
+          <a
+            href={c.href}
+            class="group relative overflow-hidden rounded-3xl shadow-soft"
+          >
+            <img
+              src={c.img}
+              alt=""
+              class="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              loading="lazy"
+            />
+            <div class="scrim absolute inset-0"></div>
+            <div class="absolute inset-x-0 bottom-0 p-5 text-white">
+              <h3 class="font-serif text-xl">{c.title}</h3>
+              <p class="text-sm text-sand/85">{c.sub}</p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- モデルコース teaser -->
+  <section class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+    <div class="mb-8 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p class="text-xs font-bold tracking-[0.2em] text-shallow">モデルコース</p>
+        <h2 class="mt-2 font-serif text-3xl text-ink">時間に合わせて、めぐる</h2>
+      </div>
+      <a href="/model-course" class="text-sm font-medium text-deep underline underline-offset-4">
+        コースを作る・保存する →
+      </a>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        routes.map((r) => (
+          <a
+            href="/model-course"
+            class="flex flex-col overflow-hidden rounded-3xl border border-black/5 bg-white shadow-soft"
+          >
+            <img src={r.image} alt={r.alt} class="h-36 w-full object-cover" loading="lazy" />
+            <div class="p-4">
+              <p class="text-xs font-bold text-deep">{r.duration}</p>
+              <h3 class="mt-1 font-serif text-lg text-ink">{r.title.split('―')[1]?.trim() ?? r.title}</h3>
+              <p class="mt-1 text-xs leading-relaxed text-ink-soft">{r.best}</p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 歴史 teaser -->
+  <section class="relative overflow-hidden">
+    <img src="/images/lighthouse.jpg" alt="御影石造りの角島灯台" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+    <div class="absolute inset-0 bg-ink/55"></div>
+    <div class="relative mx-auto max-w-6xl px-4 py-24 text-center text-white md:px-6">
+      <p class="text-xs font-bold tracking-[0.2em] text-sky/90">角島の歴史</p>
+      <h2 class="mx-auto mt-3 max-w-2xl font-serif text-3xl leading-relaxed md:text-4xl">
+        灯台は海路を見守り、<br />大橋は島をつないだ。
+      </h2>
+      <p class="mx-auto mt-5 max-w-xl text-sand/85">
+        1876年、島の西端に灯台がともりました。2000年、海の上に一本の道が架かりました。
+      </p>
+      <a
+        href="/history"
+        class="mt-8 inline-block rounded-full border border-white/60 px-6 py-3 font-medium text-white backdrop-blur transition-colors hover:bg-white/15"
+      >
+        灯台と大橋の物語 →
+      </a>
+    </div>
+  </section>
+</Base>

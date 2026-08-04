@@ -1,0 +1,22 @@
+---
+// GEO向け「まず結論」ブロック：ページ冒頭で問いに直接答える
+interface Props {
+  q: string;
+}
+const { q } = Astro.props;
+---
+<div class="rounded-2xl border border-deep/15 bg-white/70 p-5 md:p-6">
+  <div class="flex items-start gap-3">
+    <span
+      class="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-deep text-xs font-bold text-white"
+      >Q</span
+    >
+    <div>
+      <p class="font-serif text-lg text-ink">{q}</p>
+      <div class="mt-2 flex gap-3 text-[15px] leading-relaxed text-ink-soft">
+        <span class="font-bold text-shallow">A.</span>
+        <p><slot /></p>
+      </div>
+    </div>
+  </div>
+</div>

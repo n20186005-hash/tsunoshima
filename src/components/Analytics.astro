@@ -1,0 +1,47 @@
+---
+import { site } from '../data/site';
+const id = site.ga4;
+---
+{
+  import.meta.env.PROD && (
+    <>
+      <script
+        is:inline
+        src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
+        async
+      />
+      <script is:inline define:vars={{ id }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', id, { anonymize_ip: true });
+      </script>
+    </>
+  )
+}
+{
+  !import.meta.env.PROD && (
+    <script is:inline>
+      // 開発時はGA4を送らず、コンソールに出す
+      window.gtag = function () {
+        console.debug('[gtag:dev]', ...arguments);
+      };
+    </script>
+  )
+}
+<script>
+  // データ属性でイベントを宣言的に送る： data-ga="event_name" data-ga-params='{"k":"v"}'
+  document.addEventListener('click', (e) => {
+    const el = (e.target as HTMLElement)?.closest?.('[data-ga]') as HTMLElement | null;
+    if (!el) return;
+    const name = el.dataset.ga!;
+    let params = {};
+    try {
+      params = el.dataset.gaParams ? JSON.parse(el.dataset.gaParams) : {};
+    } catch {}
+    (window as any).gtag?.('event', name, params);
+  });
+</script>

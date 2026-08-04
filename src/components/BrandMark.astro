@@ -1,0 +1,36 @@
+---
+// 橋・海・島のロゴマーク（橋のカーブ＋鳩島の楕円＋海のアーチ）
+interface Props {
+  class?: string;
+  title?: string;
+}
+const { class: klass = 'h-8 w-8', title = '角島展望台' } = Astro.props;
+---
+<svg
+  class={klass}
+  viewBox="0 0 48 48"
+  role="img"
+  aria-label={title}
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- 海のアーチ（水平線） -->
+  <path
+    d="M4 33a20 20 0 0 1 40 0"
+    stroke="var(--color-shallow)"
+    stroke-width="2"
+    stroke-linecap="round"
+    opacity="0.55"
+  />
+  <!-- 角島大橋のカーブ -->
+  <path
+    d="M6 36 C 18 34, 22 22, 42 15"
+    stroke="currentColor"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+  <!-- 鳩島の楕円 -->
+  <ellipse cx="17" cy="30" rx="3.4" ry="2.2" fill="var(--color-deep)" />
+  <!-- 太陽 -->
+  <circle cx="38" cy="15" r="3.2" fill="var(--color-shallow)" />
+</svg>
