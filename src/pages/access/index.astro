@@ -32,6 +32,8 @@ const accessFaq = [
   { q: '角島大橋の駐車場はどこですか？', a: '本州側は海士ヶ瀬公園の無料駐車場（約46台・24時間）です。ナビの目的地は展望台ではなく「海士ヶ瀬公園」に設定してください。' },
   { q: 'バスで角島まで行けますか？', a: 'JR滝部駅または特牛駅から角島方面のバスに乗り、「ホテル西長門リゾート入口」で下車、徒歩約3分です。便数が少ないため当日の時刻を必ずご確認ください。' },
   { q: '夏は渋滞しますか？', a: '夏休み・お盆・週末は混雑します。角島から本州へ戻る方向は13:30〜15:00ごろが混雑の目安です。午前中の到着がおすすめです。' },
+  { q: '一番近い空港はどこですか？', a: '山口宇部空港（UBJ）が最寄りです。そこからレンタカーか乗合タクシーで約90分です。' },
+  { q: 'タクシーで行けますか？', a: '最寄り駅（滝部・特牛）から観光タクシーや配車アプリの利用が可能です。島内に常駐するタクシーは限られるため、事前予約をおすすめします。' },
 ];
 ---
 <Base
@@ -151,6 +153,52 @@ const accessFaq = [
     </div>
   </section>
 
+  <!-- 空港・駅から -->
+  <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+    <h2 class="font-serif text-2xl text-ink">空港・駅からやってくる</h2>
+    <div class="mt-6 grid gap-6 md:grid-cols-3">
+      <div class="rounded-3xl border border-black/5 bg-white p-6 shadow-soft">
+        <h3 class="font-serif text-lg text-deep">山口宇部空港（UBJ）</h3>
+        <p class="mt-3 text-sm leading-relaxed text-ink">
+          最寄りの空港。空港からレンタカーか乗合タクシーで、角島へ約90分。便数が限られるため、事前の手配を。
+        </p>
+      </div>
+      <div class="rounded-3xl border border-black/5 bg-white p-6 shadow-soft">
+        <h3 class="font-serif text-lg text-deep">新山口駅（新幹線）</h3>
+        <p class="mt-3 text-sm leading-relaxed text-ink">
+          新幹線で新山口駅へ。そこから在来線で滝部・特牛方面へ、あるいはレンタカーで約70–90分。
+        </p>
+      </div>
+      <div class="rounded-3xl border border-black/5 bg-white p-6 shadow-soft">
+        <h3 class="font-serif text-lg text-deep">福岡空港（国際線）</h3>
+        <p class="mt-3 text-sm leading-relaxed text-ink">
+          福岡から高速バス・新幹線で下関方面へ。レンタカーを含めた移動が現実的です（約3時間超）。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- タクシー・レンタカー -->
+  <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="rounded-3xl border border-deep/15 bg-white p-6">
+        <h2 class="font-serif text-2xl text-ink">タクシーで行く</h2>
+        <p class="mt-3 text-sm leading-relaxed text-ink">
+          最寄りの駅（滝部・特牛）から、観光タクシーや配車アプリで直接向かうこともできます。
+          便数の少ないバスに合わせるより、待ち時間を減らせる場合があります。
+          島内に常駐するタクシーは限られるため、事前予約が安心です。
+        </p>
+      </div>
+      <div class="rounded-3xl border border-deep/15 bg-white p-6">
+        <h2 class="font-serif text-2xl text-ink">レンタカーで行く</h2>
+        <p class="mt-3 text-sm leading-relaxed text-ink">
+          空港や駅でレンタカーを借りると、角島を含む北長門海岸一帯を自由にめぐれます。
+          給油は本州側の市街地で。満タン・満充電で島へ向かうのが安心です。
+        </p>
+      </div>
+    </div>
+  </section>
+
   <!-- 混雑 -->
   <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
     <div class="grid gap-6 md:grid-cols-2">
@@ -176,6 +224,13 @@ const accessFaq = [
           <li class="flex gap-2"><span class="text-shallow">—</span>橋上での駐停車・撮影のための停車はしない。</li>
         </ul>
       </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+    <div class="rounded-3xl bg-sky/50 px-6 py-5 text-sm text-ink">
+      橋を正面から撮る<b>高台の撮り方</b>は、
+      <a href="/photo-guide" class="font-medium text-deep underline underline-offset-2">写真ガイド</a>へ。おすすめの焦点距離とマナーも紹介しています。
     </div>
   </section>
 </Base>

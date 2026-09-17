@@ -1,11 +1,11 @@
 export const site = {
   name: '角島展望台',
   tagline: '角島大橋を望む、海への入口',
-  seoName: '角島展望台ガイド｜角島大橋の撮影スポット・駐車場・アクセス',
+  seoName: '角島展望台・海士ヶ瀬公園ガイド｜角島大橋の撮影スポット・駐車場・アクセス',
   description:
     '角島大橋を望む本州側の展望台ガイド。海士ヶ瀬公園の駐車場、四つの撮影スポット、アクセス、モデルコース、周辺グルメを、旅の前と現地の両方で役立つようにまとめました。',
   // 本番の公開URLに合わせて変更してください
-  url: 'https://tsunoshima-viewpoint.pages.dev',
+  url: 'https://tsunoshima.org',
   locale: 'ja_JP',
   lang: 'ja',
   ga4: 'G-HXM22WWPKP',
@@ -29,6 +29,7 @@ export const nav = [
   { href: '/access', label: 'アクセス・駐車場' },
   { href: '/photo-guide', label: '写真ガイド' },
   { href: '/model-course', label: 'モデルコース' },
+  { href: '/guide', label: '旅のガイド' },
   { href: '/food', label: '周辺グルメ' },
   { href: '/history', label: '歴史' },
   { href: '/faq', label: 'よくある質問' },

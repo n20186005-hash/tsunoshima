@@ -1,0 +1,21 @@
+{
+  "name": "角島展望台ガイド（Tsunoshima Viewpoint）",
+  "short_name": "角島展望台",
+  "description": "角島大橋を望む本州側の展望台ガイド。駐車・撮影・アクセス・グルメ・行程づくりを日本語で。",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f0e6",
+  "theme_color": "#126d82",
+  "lang": "ja",
+  "categories": ["travel", "navigation"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

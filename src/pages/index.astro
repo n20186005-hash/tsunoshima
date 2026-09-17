@@ -4,7 +4,11 @@ import SchematicMap from '../components/SchematicMap.astro';
 import ViewpointCards from '../components/ViewpointCards.astro';
 import TsunoshimaBlue from '../components/TsunoshimaBlue.astro';
 import QA from '../components/QA.astro';
+import GoogleRating from '../components/GoogleRating.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import Weather from '../components/Weather.astro';
 import { site, geo, navUrl } from '../data/site';
+import { attraction } from '../data/attraction';
 import { routes } from '../data/routes';
 import { faqSchema } from '../lib/schema';
 import { faqs } from '../data/faq';
@@ -18,7 +22,7 @@ const quickFacts = [
 const guideCards = [
   { href: '/access', title: 'アクセス・駐車場', sub: '車・バス・混雑・強風', img: '/images/bus.jpg' },
   { href: '/photo-guide', title: '写真ガイド', sub: '天気別・焦点距離・マナー', img: '/images/bridge-front.jpg' },
-  { href: '/food', title: '周辺グルメ', sub: '過橋前・島内・環島途中', img: '/images/store.jpg' },
+  { href: '/food', title: '周辺グルメ', sub: '海鮮丼・ランチ・カフェ・スイーツ', img: '/images/store.jpg' },
 ];
 ---
 <Base schemas={[faqSchema(faqs.slice(0, 6))]}>
@@ -111,6 +115,61 @@ const guideCards = [
     </div>
   </section>
 
+  <!-- 実体・所在地（SEO エンティティバインド：名称・都市・住所・周辺） -->
+  <section class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+    <p class="text-xs font-bold tracking-[0.2em] text-shallow">About</p>
+    <h2 class="mt-2 font-serif text-3xl text-ink">
+      About {attraction.fullName}（{attraction.jpName}）
+    </h2>
+
+    <p class="mt-4 max-w-2xl leading-relaxed text-ink-soft">
+      <b>{attraction.fullName}</b>（{attraction.jpName}）は、山口県下関市の角島へ向かう一本の橋「角島大橋」を望む、本州側の展望台です。
+      {attraction.city}、{attraction.region}、{attraction.country} にあり、角島を訪れる旅の入口となっています。
+    </p>
+
+    <!-- 地理パンくず（帰属階層） -->
+    <p class="mt-4 inline-flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+      <span class="font-medium text-ink">{attraction.fullName}</span>
+      <span aria-hidden="true">→</span>
+      <span>{attraction.city}（{attraction.cityJp}）</span>
+      <span aria-hidden="true">→</span>
+      <span>{attraction.region}（{attraction.regionJp}）</span>
+      <span aria-hidden="true">→</span>
+      <span>{attraction.country}（{attraction.countryJp}）</span>
+    </p>
+
+    <p class="mt-4 max-w-2xl leading-relaxed text-ink-soft">
+      {attraction.jpName} を訪れると、橋と海の景観のほか、すぐ近くに
+      <b>{attraction.nearbyLandmark1}</b>（{attraction.nearbyLandmark1En}）や
+      <b>{attraction.nearbyLandmark2}</b>（{attraction.nearbyLandmark2En}）といった周辺の名所も巡ることができます。
+    </p>
+
+    <!-- 評価（ページ表示のみ）＋ 地図＋ 公式観光リンク -->
+    <div class="mt-8 grid gap-6 lg:grid-cols-2">
+      <GoogleRating />
+      <div>
+        <MapEmbed />
+        <p class="mt-3 text-sm leading-relaxed text-ink-soft">
+          公式の観光情報は
+          <a
+            href={attraction.govtTourismUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-deep underline underline-offset-2"
+          >
+            山口県 観光ポータル（おいでませ山口へ）
+          </a>
+          でもご確認いただけます。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 天気（サーバー取得＋クライアント更新） -->
+  <section class="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+    <Weather />
+  </section>
+
   <div class="hairline mx-auto max-w-5xl"></div>
 
   <!-- 4スポット比較 -->
@@ -162,7 +221,7 @@ const guideCards = [
           >
             <img
               src={c.img}
-              alt=""
+              alt={c.title}
               class="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy"
             />

@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
 import { site } from '../data/site';
+import { attraction } from '../data/attraction';
 import { placeSchema, breadcrumb } from '../lib/schema';
 
 interface Props {
@@ -27,6 +28,7 @@ const {
 const pageTitle = title ? `${title}｜${site.name}` : site.seoName;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const ogUrl = new URL(image, site.url).href;
+const ogImageAlt = `${attraction.fullName} in ${attraction.city}, ${attraction.country}`;
 
 const jsonLd = [
   placeSchema,
@@ -49,11 +51,16 @@ const jsonLd = [
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={site.locale} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content={site.name} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     {
@@ -62,6 +69,18 @@ const jsonLd = [
       ))
     }
     <Analytics />
+
+    {
+      import.meta.env.PROD && (
+        <script is:inline>
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+              navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
+          }
+        </script>
+      )
+    }
   </head>
   <body>
     <a

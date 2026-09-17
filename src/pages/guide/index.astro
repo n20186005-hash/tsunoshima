@@ -1,0 +1,272 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Weather from '../../components/Weather.astro';
+import { faqSchema } from '../../lib/schema';
+
+const crumbs = [
+  { name: 'ホーム', path: '/' },
+  { name: '旅のガイド', path: '/guide' },
+];
+
+const seasons = [
+  {
+    name: '春',
+    month: '3 – 5月',
+    climate: '爽やかで過ごしやすい日が増えますが、日本海側らしく風の強い日も多いです。海の透明度が高まり、エメラルドグリーンの浅瀬が際立ちます。',
+    best: '新緑と大橋のコントラスト、潮の引いた干潟での生きもの観察。',
+    care: '橋の上は横風に注意。強風時は通行規制の可能性があります。',
+  },
+  {
+    name: '夏',
+    month: '6 – 8月',
+    climate: '気温が高く、紫外線が強い時季。にわか雨やゲリラ雷雨も。海水浴のシーズンで、年間でもっともにぎわいます。',
+    best: '早朝の撮影、海水浴・キャンプ。夕景の橋は人気の時間帯です。',
+    care: '熱中症と日焼け対策を。復路の渋滞（13:30–15:00ごろ）に余裕を持って。',
+  },
+  {
+    name: '秋',
+    month: '9 – 11月',
+    climate: '一年でもっとも過ごしやすく、海の青さが際立つベストシーズン。台風の影響で荒天が続くこともあります。',
+    best: '撮影、島内ドライブ、夕暮れの散策。',
+    care: '台風接近時は通行規制の可能性を。朝夕は冷え込むことがあります。',
+  },
+  {
+    name: '冬',
+    month: '12 – 2月',
+    climate: '寒く、北風が強く荒天の日が増えます。人が少なく、静かな景色が楽しめます。',
+    best: '静かな撮影、空いた駐車場でのんびりと。',
+    care: '営業店の休業が増えます。日没が早く、暗くなる前の行動を。',
+  },
+];
+
+const routes = [
+  {
+    title: '半日コース（約3時間）',
+    who: '大橋をじっくり見る・初めての方',
+    steps: [
+      '海士ヶ瀬公園（本州側無料駐車場）に停める',
+      '展望台へ徒歩で（橋と海を一望）',
+      '角島大橋のたもとへ降りて、橋を望みながら撮影',
+      '周辺を散策して出発',
+    ],
+  },
+  {
+    title: '一日コース（約6–7時間）',
+    who: '島をめぐる・灯台と海を満喫',
+    steps: [
+      '半日コースをめぐる',
+      '角島灯台へ（登灯・国の重要文化財）',
+      '角島海水浴場・キャンプ場エリアを散策',
+      '島内をドライブ（湯玉・北浦方面の周遊）',
+      '夕景の時間に合わせて展望台へ戻る',
+    ],
+  },
+];
+
+const stays = [
+  {
+    icon: '👨‍👩‍👧',
+    title: '亲子家庭',
+    points: [
+      '駐車場そばのトイレと芝生スペースを活用',
+      '浅瀬や波打ち際は遊ばせない（波・転落に注意）',
+      '橋の上は風が強く、小さな子は手を離さず',
+      '飲み物・おやつは先に用意（島内にコンビニなし）',
+    ],
+  },
+  {
+    icon: '📷',
+    title: '摄影・自然',
+    points: [
+      '朝焼けは早朝、夕景は日の入り前後が狙い目',
+      '潮位で浅瀬の色と範囲が変わる（大潮干潮時は広く）',
+      '三脚は通行の邪魔にならない場所で',
+      '無人機（ドローン）は飛行禁止区域・法規を確認',
+    ],
+  },
+  {
+    icon: '♿',
+    title: '低体力・車いす',
+    points: [
+      '展望台は駐車場から近く、多機能トイレがあります',
+      '平坦な経路で無理なく往復できる',
+      '島内の主な施設にもバリアフリー対応あり',
+      '強風時は体調と服装に配慮',
+    ],
+  },
+];
+
+const services = [
+  { k: 'トイレ', v: '海士ヶ瀬公園に公衆トイレ（多機能含む）。展望台付近や島内の主な施設にも。' },
+  { k: '駐車場', v: '本州側は海士ヶ瀬公園（無料・約46台・24時間）。島内にも数カ所の無料駐車帯があります。' },
+  { k: '食事', v: '本州側・島内に飲食店が点在しますが、営業日と時間は限られ、休業も。島内にコンビニはありません。' },
+  { k: '宿泊', v: '近隣に旅館・ホテル・民宿・キャンプ場（角島・湯玉・北浦エリア）があります。繁忙期は早めの予約を。' },
+  { k: '買い物', v: 'お土産や海産物の店が点在。日用品は本州側のコンビニ・スーパー（車で数十分）で。' },
+  { k: '給油・充電', v: 'ガソリンスタンドは本州側の市街地（下関・豊北町中心部）。電気自動車の充電は限られるため、満充電でお越しください。' },
+];
+
+const guideFaq = [
+  { q: '天気はどこから取っていますか？', a: '角島付近の予報を表示しています。外出の直前は、気象庁などの公式発表もあわせてご確認ください。' },
+  { q: '一番空いている時間は？', a: '夏の休日を除く平日の午前中、および冬場が比較的すいています。夏の復路渋滞の目安は13:30–15:00ごろです。' },
+  { q: '島内にコンビニはありますか？', a: 'ありません。飲み物や日用品は、本州側で先にご用意ください。' },
+];
+---
+<Base
+  title="角島の旅のガイド｜天気・季節・ルート・施設"
+  description="角島展望台・角島大橋を余裕をもって楽しむためのガイド。天気と服装の目安、季節の過ごし方、半日・一日のルート、滞在タイプ別のポイント、周辺の施設と自然への配慮まで。"
+  image="/images/hero-bridge.jpg"
+  breadcrumbs={crumbs}
+  schemas={[faqSchema(guideFaq)]}
+>
+  <PageHeader
+    eyebrow="旅のガイド"
+    title="余裕をもって、角島を"
+    lead="天気の目安から、季節の過ごし方、ルートの選び方、周辺の施設まで。現地に着いてから、そして旅の前から、役立つ情報をまとめました。"
+    image="/images/hero-bridge.jpg"
+    alt="角島大橋とエメラルドグリーンの浅瀬"
+  />
+
+  <!-- 天気 -->
+  <section class="mx-auto max-w-6xl px-4 py-12 md:px-6">
+    <Weather />
+  </section>
+
+  <!-- 季節 -->
+  <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+    <p class="text-xs font-bold tracking-[0.2em] text-shallow">季節の過ごし方</p>
+    <h2 class="mt-2 font-serif text-3xl text-ink">いつ行くか、で変わる景色</h2>
+    <div class="mt-8 grid gap-5 sm:grid-cols-2">
+      {
+        seasons.map((s) => (
+          <article class="rounded-3xl border border-black/5 bg-white p-6 shadow-soft">
+            <div class="flex items-baseline justify-between">
+              <h3 class="font-serif text-2xl text-ink">{s.name}</h3>
+              <span class="tnum text-sm text-ink-soft">{s.month}</span>
+            </div>
+            <p class="mt-3 text-sm leading-relaxed text-ink">{s.climate}</p>
+            <p class="mt-3 rounded-xl bg-sky/30 px-4 py-3 text-sm text-ink">
+              <span class="font-medium">おすすめ：</span>{s.best}
+            </p>
+            <p class="mt-2 text-xs leading-relaxed text-ink-soft">
+              <span class="font-medium">注意：</span>{s.care}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+    <p class="mt-5 text-xs text-ink-soft">
+      ※ 気象や海況の傾向は、過去約30年の平年値（気象庁の長期統計など）を目安としたものです。当年の状況は都度ご確認ください。
+    </p>
+  </section>
+
+  <div class="hairline mx-auto max-w-5xl"></div>
+
+  <!-- ルート -->
+  <section class="mx-auto max-w-6xl px-4 py-12 md:px-6">
+    <p class="text-xs font-bold tracking-[0.2em] text-shallow">おすすめルート</p>
+    <h2 class="mt-2 font-serif text-3xl text-ink">時間に合わせて、めぐる</h2>
+    <div class="mt-8 grid gap-6 md:grid-cols-2">
+      {
+        routes.map((r) => (
+          <article class="rounded-3xl border border-black/5 bg-white p-6 shadow-soft">
+            <h3 class="font-serif text-xl text-ink">{r.title}</h3>
+            <p class="mt-1 text-sm text-ink-soft">{r.who}</p>
+            <ol class="mt-4 space-y-2">
+              {r.steps.map((s, i) => (
+                <li class="flex items-baseline gap-3 text-sm">
+                  <span class="tnum text-shallow">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="text-ink">{s}</span>
+                </li>
+              ))}
+            </ol>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 滞在タイプ別 -->
+  <section class="mx-auto max-w-6xl px-4 py-12 md:px-6">
+    <p class="text-xs font-bold tracking-[0.2em] text-shallow">滞在タイプ別</p>
+    <h2 class="mt-2 font-serif text-3xl text-ink">旅のスタイルに合わせて</h2>
+    <div class="mt-8 grid gap-6 md:grid-cols-3">
+      {
+        stays.map((s) => (
+          <article class="rounded-3xl border border-deep/10 bg-white p-6 shadow-soft">
+            <div class="text-3xl">{s.icon}</div>
+            <h3 class="mt-2 font-serif text-xl text-ink">{s.title}</h3>
+            <ul class="mt-4 space-y-2 text-sm text-ink">
+              {s.points.map((p) => (
+                <li class="flex gap-2"><span class="text-shallow">—</span><span>{p}</span></li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <div class="hairline mx-auto max-w-5xl"></div>
+
+  <!-- 周辺の施設・サービス -->
+  <section class="mx-auto max-w-6xl px-4 py-12 md:px-6">
+    <p class="text-xs font-bold tracking-[0.2em] text-shallow">周辺の施設・サービス</p>
+    <h2 class="mt-2 font-serif text-3xl text-ink">事前に知っておくと安心</h2>
+    <p class="mt-2 max-w-2xl text-sm text-ink-soft">
+      具体的な店名はあえて挙げず、種別と特徴だけを。現地の最新情報は、お出かけ前にご自身でご確認ください。
+    </p>
+    <dl class="mt-8 grid gap-4 sm:grid-cols-2">
+      {
+        services.map((f) => (
+          <div class="rounded-3xl border border-black/5 bg-white p-6 shadow-soft">
+            <dt class="font-serif text-lg text-deep">{f.k}</dt>
+            <dd class="mt-2 text-sm leading-relaxed text-ink">{f.v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- 自然と暮らす -->
+  <section class="mx-auto max-w-6xl px-4 py-12 md:px-6">
+    <div class="rounded-3xl bg-wood/10 p-8">
+      <p class="text-xs font-bold tracking-[0.2em] text-shallow">自然と暮らす</p>
+      <h2 class="mt-2 font-serif text-3xl text-ink">この海の色は、なぜだろう</h2>
+      <p class="mt-4 max-w-2xl leading-loose text-ink/90">
+        角島の海がエメラルドグリーンに見えるのは、浅瀬に広がるサンゴや海草、そして白い砂礫が光を反射するためです。
+        一日のうちでも、潮の満ち引きで浅瀬の広がりが変わり、同じ場所とは思えない表情を見せます。
+        鳥や魚、季節の渡り鳥も、この海の常連です。
+      </p>
+      <h3 class="mt-6 font-serif text-xl text-ink">访客の責任として</h3>
+      <ul class="mt-3 grid gap-2 text-sm text-ink sm:grid-cols-2">
+        <li class="flex gap-2"><span class="text-wood">●</span>ゴミは持ち帰る（島内に大型ごみの処理は限られます）</li>
+        <li class="flex gap-2"><span class="text-wood">●</span>サンゴや植物は触らず、持ち出さない</li>
+        <li class="flex gap-2"><span class="text-wood">●</span>決められた場所以外へは入らない</li>
+        <li class="flex gap-2"><span class="text-wood">●</span>火の取り扱いに注意（キャンプ場以外の直火は不可）</li>
+        <li class="flex gap-2"><span class="text-wood">●</span>強風時は橋の上の歩行・撮影に注意</li>
+        <li class="flex gap-2"><span class="text-wood">●</span>他の来訪者と自然に配慮したマナーを</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 名前と伝説 -->
+  <section class="mx-auto max-w-6xl px-4 py-12 md:px-6">
+    <div class="rounded-3xl border border-deep/15 bg-white p-8 shadow-soft">
+      <p class="text-xs font-bold tracking-[0.2em] text-shallow">角島の名前と伝説</p>
+      <h2 class="mt-2 font-serif text-3xl text-ink">島に息づく物語</h2>
+      <p class="mt-4 max-w-2xl leading-loose text-ink/90">
+        「角島（つのしま）」という名の由来には諸説があり、島の地形や古い文献にその手がかりがあります。
+        1876年にともった角島灯台は、英国人技師の設計による御影石造りで、いまも登れる灯台として島の象徴です。
+        橋ができる前、人々は船で海を渡ってきました。島に伝わる言い伝えや、灯台守たちの暮らしの物語は、
+        いまの景色の奥にある歴史です。
+      </p>
+      <a
+        href="/history"
+        class="mt-5 inline-flex items-center gap-1.5 rounded-full bg-deep px-5 py-2.5 text-sm font-medium text-white shadow-soft transition-transform hover:-translate-y-0.5"
+      >
+        角島の歴史を読む →
+      </a>
+    </div>
+  </section>
+</Base>

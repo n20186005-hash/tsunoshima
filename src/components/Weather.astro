@@ -1,0 +1,85 @@
+---
+// 角島付近の天気・服装の目安。
+// サーバー側（ビルド時）で取得して HTML に埋め込み、クライアントで最新に更新する。
+// 取得に失敗しても、ブラウザ側で補完するのでページは壊れません。
+import { fetchWeather, renderWeatherHTML, type WeatherData } from '../lib/weather';
+
+let initial: WeatherData | null = null;
+try {
+  initial = await fetchWeather();
+} catch {
+  initial = null;
+}
+---
+
+<div class="rounded-3xl border border-deep/15 bg-white/85 p-6 shadow-soft" id="weather">
+  <div class="flex items-center justify-between gap-2">
+    <h2 class="font-serif text-xl text-ink">角島の天気・服装の目安</h2>
+    <span class="text-xs text-ink-soft" id="wx-updated"></span>
+  </div>
+
+  <div
+    id="wx-body"
+    class="mt-4"
+    set:html={initial ? renderWeatherHTML(initial) : '天気を読み込み中…'}
+  >
+  </div>
+
+  <p class="mt-3 text-xs text-ink-soft">
+    山口県下関市・角島付近の予報。外出の直前は、気象庁などの公式発表もあわせてご確認ください。
+  </p>
+</div>
+
+<script>
+  import { fetchWeather, renderWeatherHTML, type WeatherData } from '../lib/weather';
+
+  const CACHE_KEY = 'tsunoshima:weather:v1';
+  const CACHE_MS = 30 * 60 * 1000; // 30 分キャッシュ
+
+  function paint(data: WeatherData) {
+    const body = document.getElementById('wx-body');
+    const upd = document.getElementById('wx-updated');
+    if (body) {
+      body.innerHTML = renderWeatherHTML(data);
+      body.dataset.loaded = '1';
+    }
+    if (upd) {
+      const t = new Date();
+      const hh = String(t.getHours()).padStart(2, '0');
+      const mm = String(t.getMinutes()).padStart(2, '0');
+      upd.textContent = `更新 ${hh}:${mm}`;
+    }
+  }
+
+  (async () => {
+    const now = Date.now();
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (raw) {
+        const cached = JSON.parse(raw) as { t: number; data: WeatherData };
+        if (now - cached.t < CACHE_MS) {
+          paint(cached.data);
+          return;
+        }
+      }
+    } catch {
+      /* キャッシュ破損時は無視して再取得 */
+    }
+
+    try {
+      const data = await fetchWeather();
+      paint(data);
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data }));
+      } catch {
+        /* 容量不足などは無視 */
+      }
+    } catch {
+      const body = document.getElementById('wx-body');
+      if (body && !body.dataset.loaded) {
+        body.innerHTML =
+          '<p class="text-sm text-ink-soft">現在、天気を取得できませんでした。しばらくしてから再度お試しください。</p>';
+      }
+    }
+  })();
+</script>

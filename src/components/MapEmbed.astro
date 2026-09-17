@@ -1,0 +1,61 @@
+---
+// Google マップを「クリック後に読み込む」遅延ロード。
+// ファーストビューをブロックせず、かつ SEO の Location セクションに地図を置ける。
+import { attraction } from '../data/attraction';
+interface Props {
+  src?: string;
+  label?: string;
+}
+const { src = attraction.mapsEmbedSrc, label = '地図を開く' } = Astro.props;
+---
+<div
+  class="map-embed relative overflow-hidden rounded-3xl border border-black/5 bg-sky/30"
+  style="aspect-ratio: 16 / 9;"
+  data-map-embed
+  data-src={src}
+>
+  <button
+    type="button"
+    class="group absolute inset-0 flex flex-col items-center justify-center gap-2 text-ink"
+    data-map-trigger
+    aria-label={label}
+  >
+    <span class="grid h-12 w-12 place-items-center rounded-full bg-deep text-white shadow-soft transition-transform group-hover:-translate-y-0.5">
+      <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11Z" stroke-linejoin="round" />
+        <circle cx="12" cy="10" r="2.5" />
+      </svg>
+    </span>
+    <span class="text-sm font-medium">{label}</span>
+    <span class="text-xs text-ink-soft">角島展望台・下関市（Google マップ）</span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-map-embed]').forEach((box) => {
+    const trigger = box.querySelector<HTMLButtonElement>('[data-map-trigger]');
+    if (!trigger) return;
+    trigger.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = box.dataset.src || '';
+      iframe.width = '100%';
+      iframe.height = '100%';
+      iframe.style.border = '0';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allowFullscreen = true;
+      iframe.title = '角島展望台の Google マップ';
+      box.innerHTML = '';
+      box.appendChild(iframe);
+    });
+  });
+</script>
+
+<style is:global>
+  .map-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>

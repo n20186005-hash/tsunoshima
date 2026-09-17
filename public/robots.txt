@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tsunoshima-viewpoint.pages.dev/sitemap-index.xml
+Sitemap: https://tsunoshima.org/sitemap-index.xml

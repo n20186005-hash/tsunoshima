@@ -1,12 +1,24 @@
+# ── 依存関係（アップロードしない） ──
 node_modules/
+
+# ── ビルド成果物（Cloudflare Workers へは dist/ をデプロイ） ──
 dist/
-.env
-*.local
-.DS_Store
-*.log
-apps/web/src/routeTree.gen.ts
-releases/
-
-
-.astro
+.astro/
 .wrangler/
+.cache/
+
+# ── ローカル環境変数・秘密情報 ──
+.env
+.env.*
+*.local
+
+# ── OS / エディタ ──
+.DS_Store
+Thumbs.db
+*.log
+*.tsbuildinfo
+
+# ── その他 ──
+releases/
+.claude/
+apps/web/src/routeTree.gen.ts

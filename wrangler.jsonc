@@ -2,7 +2,7 @@
   // 静的ビルド（dist/）を Cloudflare Workers の静的アセットとして配信する設定。
   // デプロイ: pnpm build && npx wrangler deploy
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tsunoshima-viewpoint",
+  "name": "tsunoshima-org",
   "compatibility_date": "2025-01-01",
   "assets": {
     "directory": "./dist",
