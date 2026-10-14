@@ -25,7 +25,11 @@ const {
   wide = false,
 } = Astro.props;
 
-const pageTitle = title ? `${title}｜${site.name}` : site.seoName;
+const pageTitle = title
+  ? title.includes(site.name)
+    ? title
+    : `${title}｜${site.name}`
+  : site.seoName;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const ogUrl = new URL(image, site.url).href;
 const ogImageAlt = `${attraction.fullName} in ${attraction.city}, ${attraction.country}`;

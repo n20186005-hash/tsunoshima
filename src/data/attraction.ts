@@ -44,14 +44,14 @@ export const attraction = {
   // Google マップの評価（ページ表示のみ。JSON-LD には含めない）
   rating: {
     score: 4.5,
-    reviews: 7600,
+    reviews: 7675,
     source: 'Google Maps',
-    syncedAt: '2026 年 9 月',
+    syncedAt: '2026 年 10 月',
     // 評価表示のすぐ下の小字（末尾のフレーズが Google マップへのリンク）
-    inlineNote: '评分与评价数同步自谷歌地图（Google Maps）用户评价 · 2026 年 9 月 · ',
+    inlineNote: '评分与评价数同步自谷歌地图（Google Maps）用户评价 · 2026 年 10 月 · ',
     inlineNoteLink: '点击查看谷歌地图全部评价↗',
     // 評価ブロックの出所説明
-    sourceNote: '同步自 Google 地图用户评价，同步时间 2026 年 9 月；版权归原作者与 Google 地图所有',
+    sourceNote: '同步自 Google 地图用户评价，同步时间 2026 年 10 月；版权归原作者与 Google 地图所有',
     // ボタン文言
     buttonLabel: '在谷歌地图查看全部评价',
   },

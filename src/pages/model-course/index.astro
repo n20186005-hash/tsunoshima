@@ -64,6 +64,37 @@ const crumbs = [
     </div>
   </section>
 
+  <!-- 滞在時間のめやす -->
+  <section class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+    <h2 class="mb-6 font-serif text-2xl text-ink">どれくらい時間をとる？</h2>
+    <div class="overflow-x-auto rounded-3xl border border-black/5 bg-white">
+      <table class="w-full min-w-[560px] text-left text-sm">
+        <thead class="bg-sky/40 text-ink">
+          <tr>
+            <th class="px-4 py-3 font-medium">プラン</th>
+            <th class="px-4 py-3 font-medium">目安時間</th>
+            <th class="px-4 py-3 font-medium">おすすめ</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-black/5">
+          {
+            routes.map((r) => (
+              <tr class="align-top">
+                <td class="px-4 py-3 font-medium text-ink">{r.title.split('―')[1]?.trim() ?? r.title}</td>
+                <td class="px-4 py-3 text-ink-soft tnum">{r.duration}</td>
+                <td class="px-4 py-3 text-ink-soft">{r.best}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-3 text-xs leading-relaxed text-ink-soft">
+      橋だけの写真一枚なら約45分。島をひと巡りなら約3時間、光を追ってじっくり撮るなら半日、
+      角島と北浦の海岸線を合わせるなら1日がめやすです。交通渋滞や駐車待ちの時間も余裕をもって。
+    </p>
+  </section>
+
   <div class="hairline mx-auto max-w-5xl"></div>
 
   <!-- プランづくり -->
